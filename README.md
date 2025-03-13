@@ -146,25 +146,67 @@ This creates clear, visually appealing, color-coded visualizations of your sched
 ### Example Visualizations
 
 #### Light Theme
-![Light Theme Example](example_timetable_light.png)
+![Light Theme Example](output/images/timetable_light.png)
 
 #### Dark Theme
-![Dark Theme Example](example_timetable_dark.png)
+![Dark Theme Example](output/images/timetable_dark.png)
 
 #### Blue Theme
-![Blue Theme Example](example_timetable_blue.png)
+![Blue Theme Example](output/images/timetable_blue.png)
 
 #### Sepia Theme
-![Sepia Theme Example](example_timetable_sepia.png)
+![Sepia Theme Example](output/images/timetable_sepia.png)
 
 #### Purple Theme
-![Purple Theme Example](example_timetable_purple.png)
+![Purple Theme Example](output/images/timetable_purple.png)
 
 #### Green Theme
-![Green Theme Example](example_timetable_green.png)
+![Green Theme Example](output/images/timetable_green.png)
 
 #### High Contrast Theme
-![High Contrast Theme Example](example_timetable_contrast.png)
+![High Contrast Theme Example](output/images/timetable_contrast.png)
+
+## Output Formats
+
+### JSON Output
+
+The timetable can be displayed and saved in JSON format, which is useful for further processing or integration with other tools:
+
+```json
+{
+    "Monday": [
+        {
+            "time": "09:00 - 11:00",
+            "course_code": "CS4457 - LEC",
+            "lecturer": "BEN BARTLETT",
+            "room": "P1033",
+            "weeks": "Wks:1-11,13"
+        },
+        {
+            "time": "13:00 - 14:00",
+            "course_code": "CS4106 - LEC",
+            "lecturer": "MALACHY EATON",
+            "room": "S206",
+            "weeks": "Wks:1-11,13"
+        }
+    ]
+}
+```
+
+### Table Output
+
+The timetable can also be displayed in a tabular format in the terminal for better readability:
+
+```
+=== Monday ===
++---------------+--------------+---------------+--------+-------------+
+| Time          | Course       | Lecturer      | Room   | Weeks       |
++===============+==============+===============+========+=============+
+| 09:00 - 11:00 | CS4457 - LEC | BEN BARTLETT  | P1033  | Wks:1-11,13 |
++---------------+--------------+---------------+--------+-------------+
+| 13:00 - 14:00 | CS4106 - LEC | MALACHY EATON | S206   | Wks:1-11,13 |
++---------------+--------------+---------------+--------+-------------+
+```
 
 ## Calendar Export
 

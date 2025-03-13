@@ -32,8 +32,16 @@ logger.add(
     format="<green>{time:HH:mm:ss}</green> | <level>{level: <8}</level> | <level>{message}</level>",
     level="INFO",
 )
+# Create logs directory if it doesn't exist
+logs_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "logs")
+if not os.path.exists(logs_dir):
+    os.makedirs(logs_dir)
+    
 logger.add(
-    "scraper.log", format="{time} | {level} | {message}", level="INFO", rotation="1 MB"
+    os.path.join(logs_dir, "scraper.log"), 
+    format="{time} | {level} | {message}", 
+    level="INFO", 
+    rotation="1 MB"
 )
 
 
@@ -78,13 +86,13 @@ def scrape_timetable(html_content: str) -> Dict[str, Any]:
 
 def ensure_screenshot_dir() -> str:
     """
-    Ensure screenshots directory exists and create it if it doesn't.
+    Ensure logs directory exists and create it if it doesn't.
     
     Returns:
-        str: Path to the screenshots directory
+        str: Path to the logs directory for storing screenshots
     """
     screenshot_dir = os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), "screenshots"
+        os.path.dirname(os.path.abspath(__file__)), "logs"
     )
     if not os.path.exists(screenshot_dir):
         os.makedirs(screenshot_dir)
@@ -234,12 +242,23 @@ def export_to_ical(timetable: Dict[str, Any], output_file: str, semester_start_d
                     # Add the event to our calendar
                     cal.add_component(cal_event)
         
+        # Create output directory if it doesn't exist
+        output_dir = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)), "output", "data"
+        )
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+            
+        # Get the base filename without path
+        base_filename = os.path.basename(output_file)
+        output_path = os.path.join(output_dir, base_filename)
+        
         # Write the calendar to a file
-        with open(output_file, 'wb') as f:
+        with open(output_path, 'wb') as f:
             f.write(cal.to_ical())
             
-        logger.success(f"✅ Calendar exported to {output_file}")
-        return output_file
+        logger.success(f"✅ Calendar exported to {output_path}")
+        return output_path
         
     except Exception as e:
         logger.error(f"❌ Failed to export calendar: {str(e)}")
@@ -285,9 +304,21 @@ def display_timetable(timetable: Dict[str, Any], format_type: str = "json") -> N
 def save_timetable(timetable: Dict[str, Any], output_file: str) -> None:
     """Save the timetable to a file."""
     try:
-        with open(output_file, "w") as f:
+        # Create output directory if it doesn't exist
+        output_dir = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)), "output", "data"
+        )
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+            
+        # Get the base filename without path
+        base_filename = os.path.basename(output_file)
+        output_path = os.path.join(output_dir, base_filename)
+        
+        # Save the file
+        with open(output_path, "w") as f:
             json.dump(timetable, f, indent=4)
-        logger.success(f"✅ Timetable saved to {output_file}")
+        logger.success(f"✅ Timetable saved to {output_path}")
     except Exception as e:
         logger.error(f"❌ Failed to save timetable: {str(e)}")
 
@@ -719,9 +750,20 @@ def generate_timetable_image(
         # Adjust layout
         plt.tight_layout(pad=2.5)
         
+        # Create output directory if it doesn't exist
+        output_dir = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)), "output", "images"
+        )
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+            
+        # Get just the base filename without path and extension
+        base_filename = os.path.basename(os.path.splitext(output_file)[0])
+        output_path = os.path.join(output_dir, f"{base_filename}_{theme}.png")
+        
         # Save the figure with higher resolution
-        plt.savefig(f"{os.path.splitext(output_file)[0]}_{theme}.png", dpi=300, bbox_inches='tight')
-        logger.success(f"✅ Timetable image saved as {os.path.splitext(output_file)[0]}_{theme}.png")
+        plt.savefig(output_path, dpi=300, bbox_inches='tight')
+        logger.success(f"✅ Timetable image saved as {output_path}")
         
         # Close the figure
         plt.close(fig)
@@ -969,7 +1011,7 @@ def main() -> int:
             level="DEBUG",
         )
         logger.add(
-            "scraper.log",
+            os.path.join(logs_dir, "scraper.log"),
             format="{time} | {level} | {message}",
             level="DEBUG",
             rotation="1 MB",

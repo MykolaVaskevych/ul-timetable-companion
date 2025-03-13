@@ -1,0 +1,118 @@
+{
+    "Monday": [
+        {
+            "time": "09:00 - 11:00",
+            "course_code": "CS4457 - LEC",
+            "lecturer": "BEN BARTLETT",
+            "room": "P1033",
+            "weeks": "Wks:1-11,13"
+        },
+        {
+            "time": "13:00 - 14:00",
+            "course_code": "CS4106 - LEC",
+            "lecturer": "MALACHY EATON",
+            "room": "S206",
+            "weeks": "Wks:1-11,13"
+        }
+    ],
+    "Tuesday": [
+        {
+            "time": "09:00 - 10:00",
+            "course_code": "CS4187 - TUT - 3C",
+            "lecturer": "EOIN O CONCHUIR",
+            "room": "S114",
+            "weeks": "Wks:2-11,13"
+        },
+        {
+            "time": "10:00 - 11:00",
+            "course_code": "CS4116 - TUT - 3B",
+            "lecturer": "CONOR RYAN",
+            "room": "SG20",
+            "weeks": "Wks:3-11,13"
+        },
+        {
+            "time": "11:00 - 12:00",
+            "course_code": "CS4084 - LEC",
+            "lecturer": "JOHN NOLL",
+            "room": "S205",
+            "weeks": "Wks:1-11,13"
+        },
+        {
+            "time": "13:00 - 14:00",
+            "course_code": "CS4457 - LAB - 2B",
+            "lecturer": "BEN BARTLETT",
+            "room": "CS1044",
+            "weeks": "Wks:1-11,13"
+        },
+        {
+            "time": "17:00 - 18:00",
+            "course_code": "CS4106 - LEC",
+            "lecturer": "MALACHY EATON",
+            "room": "SR3008",
+            "weeks": "Wks:1-11,13"
+        }
+    ],
+    "Wednesday": [
+        {
+            "time": "10:00 - 11:00",
+            "course_code": "CS4187 - TUT - 3C",
+            "lecturer": "EOIN O CONCHUIR",
+            "room": "KB118",
+            "weeks": "Wks:2-11,13"
+        },
+        {
+            "time": "12:00 - 14:00",
+            "course_code": "CS4116 - LAB - 2B",
+            "lecturer": "CONOR RYAN",
+            "room": "CS1044",
+            "weeks": "Wks:2-11,13"
+        },
+        {
+            "time": "14:00 - 16:00",
+            "course_code": "CS4187 - TUT - 3C",
+            "lecturer": "EOIN O CONCHUIR",
+            "room": "S114",
+            "weeks": "Wks:2-11,13"
+        }
+    ],
+    "Thursday": [
+        {
+            "time": "11:00 - 13:00",
+            "course_code": "CS4084 - LAB - 2A",
+            "lecturer": "JOHN NOLL",
+            "room": "CS1044",
+            "weeks": "Wks:2-11,13"
+        },
+        {
+            "time": "13:00 - 14:00",
+            "course_code": "CS4116 - LEC",
+            "lecturer": "CONOR RYAN",
+            "room": "S206",
+            "weeks": "Wks:1-11,13"
+        },
+        {
+            "time": "15:00 - 16:00",
+            "course_code": "CS4457 - TUT - 3B",
+            "lecturer": "BEN BARTLETT",
+            "room": "SR3007",
+            "weeks": "Wks:2-11,13"
+        }
+    ],
+    "Friday": [
+        {
+            "time": "10:00 - 11:00",
+            "course_code": "CS4106 - TUT - 3C",
+            "lecturer": "MALACHY EATON",
+            "room": "SG19",
+            "weeks": "Wks:3-11,13"
+        },
+        {
+            "time": "13:00 - 15:00",
+            "course_code": "CS4187 - LEC",
+            "lecturer": "EOIN O CONCHUIR",
+            "room": "S205",
+            "weeks": "Wks:1-11,13"
+        }
+    ],
+    "Saturday": []
+}
