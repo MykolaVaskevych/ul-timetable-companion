@@ -139,6 +139,23 @@ This creates clear, visually appealing, color-coded visualizations of your sched
   - High Contrast - Maximum readability for accessibility needs
 - Higher resolution output (300 DPI) for better clarity
 
+### Example Visualizations
+
+#### Light Theme
+![Light Theme Example](example_timetable_light.png)
+
+#### Dark Theme
+![Dark Theme Example](example_timetable_dark.png)
+
+#### Blue Theme
+![Blue Theme Example](example_timetable_blue.png)
+
+#### Sepia Theme
+![Sepia Theme Example](example_timetable_sepia.png)
+
+#### High Contrast Theme
+![High Contrast Theme Example](example_timetable_contrast.png)
+
 ## Calendar Export
 
 You can export your timetable to iCalendar format (.ics) and import it into Google Calendar, Outlook, Apple Calendar, or any other calendar application:
