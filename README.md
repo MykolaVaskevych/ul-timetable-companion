@@ -1,15 +1,27 @@
 # UL Timetable Scraper
 
-A command-line tool to fetch and display University of Limerick timetables with beautiful visualizations.
+A command-line tool to fetch and display University of Limerick timetables with beautiful visualizations and calendar integration.
 
 ## Features
 
 - Scrapes timetable data from the UL timetable website
 - Display timetable in JSON or tabular format
 - Save timetable to a JSON file
-- Generate beautiful visual timetable as PNG images (light and dark mode)
-- Interactive credential input or command-line options
-- Robust page loading with configurable timeouts
+- Generate beautiful visual timetable as PNG images with multiple themes:
+  - Light Mode
+  - Dark Mode
+  - Blue Theme
+  - Sepia Theme
+  - High Contrast
+- Export timetable to calendar format (iCalendar .ics)
+- Options to import to Google Calendar and Outlook
+- Credentials management:
+  - Interactive command line input
+  - Command line parameters
+  - Environment variables
+  - JSON file input
+- Robust page loading with intelligent waiting
+- Detailed logging with screenshot capabilities
 
 ## Installation
 
@@ -56,20 +68,28 @@ ul-timetable -f table
 # Save timetable to a JSON file
 ul-timetable -o timetable.json
 
-# Generate visual timetable images (both light and dark mode)
+# Load credentials from a JSON file
+ul-timetable --creds-file credentials.json
+
+# Generate visual timetable images
 ul-timetable --image timetable.png
 
-# Generate only light mode timetable image
-ul-timetable --image timetable.png --theme light
+# Generate all theme variations
+ul-timetable --image timetable.png --theme all
 
-# Generate only dark mode timetable image
-ul-timetable --image timetable.png --theme dark
+# Generate specific theme
+ul-timetable --image timetable.png --theme blue
+ul-timetable --image timetable.png --theme sepia
+ul-timetable --image timetable.png --theme contrast
+
+# Export timetable to calendar format
+ul-timetable --export-calendar timetable.ics --semester-start 2025-01-20
 
 # Run with browser visible (not headless)
 ul-timetable --no-headless
 
-# Increase slow motion timing for better stability
-ul-timetable --slow-mo 3000
+# Enable screenshot capture during scraping
+ul-timetable --screenshots
 
 # Get verbose logging
 ul-timetable -v
@@ -78,24 +98,28 @@ ul-timetable -v
 ### Command-line options:
 
 ```
--u, --username    Your UL student email
--p, --password    Your UL password
--o, --output      Save timetable to a JSON file
--f, --format      Output format: json or table (default: json)
---image           Generate and save timetable visualization as PNG images
---theme           Theme for visualization: light, dark, or both (default: both)
---no-headless     Run browser in visible mode (not headless)
---slow-mo         Slow motion delay in milliseconds (default: 2000)
--v, --verbose     Increase logging verbosity
+-u, --username       Your UL student email
+-p, --password       Your UL password
+--creds-file         Path to a JSON file containing credentials
+-o, --output         Save timetable to a JSON file
+-f, --format         Output format: json or table (default: json)
+--image              Generate and save timetable visualization as PNG images
+--theme              Theme for visualization: light, dark, blue, sepia, contrast, or all (default: light)
+--export-calendar    Export timetable to iCalendar (.ics) format
+--semester-start     Semester start date in YYYY-MM-DD format (Monday of week 1)
+--no-headless        Run browser in visible mode (not headless)
+--slow-mo            Slow motion delay in milliseconds (default: 100)
+--screenshots        Enable taking screenshots before and after each action
+-v, --verbose        Increase logging verbosity
 ```
 
 ## Visual Timetable
 
-The tool can generate beautiful visual representations of your timetable as PNG images in both light and dark modes:
+The tool can generate beautiful visual representations of your timetable as PNG images in multiple themes:
 
 ```bash
-# Generate timetable images in both light and dark modes
-ul-timetable --image timetable.png
+# Generate timetable images in all available themes
+ul-timetable --image timetable.png --theme all
 ```
 
 This creates clear, visually appealing, color-coded visualizations of your schedule with the following features:
@@ -103,23 +127,96 @@ This creates clear, visually appealing, color-coded visualizations of your sched
 - Each day of the week is displayed along the X-axis
 - Times run vertically along the Y-axis (focused on 9:00-18:00 range)
 - Events are color-coded by room with a visually pleasing color palette
-- Course codes, room numbers, and time labels are clearly displayed
+- Course codes, lecturer names, room numbers, and time labels are clearly displayed
+- Adaptive layout that shows more details for longer events
 - Grid lines make it easy to identify class times
-- Beautiful rounded corners on event boxes
-- Both light and dark mode themes for different preferences
+- Beautiful rounded corners on event boxes with subtle shadows
+- Multiple theme options for different preferences:
+  - Light Mode - Clean, professional appearance ideal for printing
+  - Dark Mode - Reduced eye strain for nighttime viewing
+  - Blue Theme - Calming blue tones
+  - Sepia Theme - Warm, paper-like appearance for comfortable reading
+  - High Contrast - Maximum readability for accessibility needs
 - Higher resolution output (300 DPI) for better clarity
 
-## Security Notes
+## Calendar Export
 
-- Your credentials are never stored persistently
-- Password input is masked when entered interactively
-- Consider using environment variables for sensitive credentials:
+You can export your timetable to iCalendar format (.ics) and import it into Google Calendar, Outlook, Apple Calendar, or any other calendar application:
+
+```bash
+# Export timetable to iCalendar format
+ul-timetable --export-calendar timetable.ics --semester-start 2025-01-20
+```
+
+The calendar export feature requires you to specify the semester start date (the Monday of week 1) using the `--semester-start` parameter in YYYY-MM-DD format.
+
+### Importing to Google Calendar
+
+1. Export your timetable to .ics format using the command above
+2. Go to [Google Calendar](https://calendar.google.com/)
+3. Click the "+" button next to "Other calendars" in the sidebar
+4. Select "Import"
+5. Upload your .ics file
+6. Select the target calendar and click "Import"
+
+### Importing to Outlook/Office 365
+
+1. Export your timetable to .ics format using the command above
+2. Open Outlook Calendar
+3. Click "File" > "Open & Export" > "Import/Export"
+4. Select "Import an iCalendar (.ics) or vCalendar file"
+5. Browse to your .ics file and click "Open"
+6. Choose whether to add the events to your calendar or create a new calendar
+
+## Credentials Management
+
+The tool offers multiple ways to provide your credentials:
+
+### Interactive Prompt
+
+If no credentials are provided, the tool will prompt for them interactively:
+
+```bash
+ul-timetable
+```
+
+### Command Line Arguments
+
+```bash
+ul-timetable -u "your.email@studentmail.ul.ie" -p "yourpassword"
+```
+
+### Environment Variables
 
 ```bash
 export UL_USERNAME="your.email@studentmail.ul.ie"
 export UL_PASSWORD="yourpassword"
 ul-timetable
 ```
+
+### Credentials File (JSON)
+
+Create a JSON file with your credentials:
+
+```json
+{
+  "username": "your.email@studentmail.ul.ie",
+  "password": "yourpassword"
+}
+```
+
+Then use the file with:
+
+```bash
+ul-timetable --creds-file credentials.json
+```
+
+## Security Notes
+
+- Your credentials are never stored persistently by the tool
+- Password input is masked when entered interactively
+- Store your credentials file securely if you use that option
+- The tool uses HTTPS for all communications with the timetable website
 
 ## Development
 
@@ -147,26 +244,44 @@ Tests are written using pytest:
 pytest
 ```
 
+## Screenshots & Diagnostic Features
+
+The tool can take screenshots before and after each action during the scraping process. This is useful for debugging issues or understanding what's happening during the scraping process:
+
+```bash
+# Enable action screenshots
+ul-timetable --screenshots
+```
+
+Screenshots will be saved in the `screenshots/` directory with timestamps and action names.
+
 ## Troubleshooting
 
 If the scraper fails to retrieve data:
 
-1. Try increasing the slow motion delay:
+1. Enable screenshots to see what's happening at each step:
    ```
-   ul-timetable --slow-mo 3000
+   ul-timetable --screenshots
    ```
 
-2. Use the visible browser mode to see what's happening:
+2. Use the visible browser mode to watch the process:
    ```
    ul-timetable --no-headless
    ```
 
-3. Check the screenshots folder for error screenshots
+3. Try increasing the slow motion delay if pages load slowly:
+   ```
+   ul-timetable --slow-mo 500
+   ```
+
+4. Check the screenshots folder for error screenshots:
    ```
    ls screenshots/
    ```
 
-4. Enable verbose logging for more details:
+5. Enable verbose logging for more detailed information:
    ```
    ul-timetable -v
    ```
+
+6. Make sure your credentials are correct and try again
