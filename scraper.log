@@ -1,0 +1,41 @@
+2025-02-14T13:25:23.238315+0000 | INFO | 🔗 Logging in for user: 22372199@studentmail.ul.ie
+2025-02-14T13:25:24.939267+0000 | INFO | 🔄 Navigating to Student Timetable page...
+2025-02-14T13:25:24.993359+0000 | SUCCESS | ✅ Successfully retrieved timetable HTML.
+2025-02-14T13:25:25.019011+0000 | SUCCESS | ✅ Timetable successfully parsed.
+2025-02-14T13:29:13.228732+0000 | INFO | 🔗 Logging in for user: test_user
+2025-02-14T13:29:44.038472+0000 | ERROR | ⏳ Timeout error: Locator.click: Timeout 30000ms exceeded.
+Call log:
+  - waiting for get_by_role("link", name="Card image cap Student Timetable", exact=True)
+
+2025-02-14T16:02:04.315063+0000 | INFO | {'81ead9fcf3d552f6092d68b6ea2b1b45': b'7kowEQB0c5eW5scfJZFhU8TM69EUJ8rjWXZxb56pcl8='}
+2025-02-14T16:02:05.901133+0000 | INFO | {'3d3b1f9b3e395706955d77cc66626e98': b'HjOCpiqAbF-BV-2HCbH1NuFQvD3KnZNsWzULy5GYaUw='}
+2025-02-14T16:03:25.326050+0000 | INFO | {'419219f3e2ab512f6537fd6647720e3b': b'q-GUtjEkVBFSK4LSY-PQ20YTZIphHJt1IQzfwzRfHKo='}
+2025-02-14T16:03:54.357802+0000 | INFO | {'419219f3e2ab512f6537fd6647720e3b': b'q-GUtjEkVBFSK4LSY-PQ20YTZIphHJt1IQzfwzRfHKo=', 'd294f692295fd474a54663a8439d078a': b'et_kwFjJVknD93bhmipo7Kmik5GKN4Xn-OCqBgJLe4Q='}
+2025-02-14T16:03:55.911498+0000 | INFO | {'419219f3e2ab512f6537fd6647720e3b': b'q-GUtjEkVBFSK4LSY-PQ20YTZIphHJt1IQzfwzRfHKo=', 'd294f692295fd474a54663a8439d078a': b'et_kwFjJVknD93bhmipo7Kmik5GKN4Xn-OCqBgJLe4Q=', '188f4809fe200f39ac8747b75cd14d5c': b'zfA-cvOe7FqbAOiGyaND0H1aE1iKZ8pL1D2MOB5pMLg='}
+2025-02-14T16:08:00.887022+0000 | INFO | {'7558c410b66da71e3e00605f8be07086': b'yNtuxD5SE_1B0HJfp2aM4XzBADepi9CTdN3by9aq2ik='}
+2025-02-14T16:08:00.895098+0000 | INFO | {'7558c410b66da71e3e00605f8be07086': b'yNtuxD5SE_1B0HJfp2aM4XzBADepi9CTdN3by9aq2ik='}
+2025-02-14T16:08:01.575314+0000 | INFO | 🔗 Logging in for user: 22372199@studentmail.ul.ie
+2025-02-14T16:08:03.397391+0000 | INFO | 🔄 Navigating to Student Timetable page...
+2025-02-14T16:08:03.492451+0000 | SUCCESS | ✅ Successfully retrieved timetable HTML.
+2025-02-14T16:08:03.525275+0000 | SUCCESS | ✅ Timetable successfully parsed.
+2025-02-14T16:08:29.802533+0000 | INFO | {'21738973a794f902b406904a43cc2a30': b'O1ni-83KlgvoVwHwi9PnBXubLnQTTsAq9Vxo_eaaFso='}
+2025-02-14T16:08:29.805242+0000 | INFO | {'21738973a794f902b406904a43cc2a30': b'O1ni-83KlgvoVwHwi9PnBXubLnQTTsAq9Vxo_eaaFso='}
+2025-02-14T16:08:30.192489+0000 | INFO | 🔗 Logging in for user: 22372199@studentmail.ul.ie
+2025-02-14T16:08:32.025502+0000 | INFO | 🔄 Navigating to Student Timetable page...
+2025-02-14T16:08:32.229340+0000 | SUCCESS | ✅ Successfully retrieved timetable HTML.
+2025-02-14T16:08:32.266034+0000 | SUCCESS | ✅ Timetable successfully parsed.
+2025-02-14T16:08:33.993718+0000 | INFO | {'d815cebb558b766725fd31166d9b9daa': b'Aovlnu-XFcFY2OSFm_iPcbrkuxjyIfU6njk8qn4WVz8='}
+2025-02-14T16:08:33.996533+0000 | INFO | {'d815cebb558b766725fd31166d9b9daa': b'Aovlnu-XFcFY2OSFm_iPcbrkuxjyIfU6njk8qn4WVz8='}
+2025-02-14T16:08:34.362684+0000 | INFO | 🔗 Logging in for user: 22372199@studentmail.ul.ie
+2025-02-14T16:08:40.144312+0000 | INFO | 🔄 Navigating to Student Timetable page...
+2025-02-14T16:08:40.199223+0000 | SUCCESS | ✅ Successfully retrieved timetable HTML.
+2025-02-14T16:08:40.224528+0000 | SUCCESS | ✅ Timetable successfully parsed.
+2025-02-14T16:28:00.539986+0000 | INFO | {'d1a5dc2d478b4d52fc1798e2d1c86f64': b'HK_nLSLAC2piq8M1I7TNA5k7kS5jdzY7gLVDUwTaD4s='}
+2025-02-14T16:31:36.067689+0000 | INFO | {'d1a5dc2d478b4d52fc1798e2d1c86f64': b'HK_nLSLAC2piq8M1I7TNA5k7kS5jdzY7gLVDUwTaD4s=', '2296f6c4e1cced7f2914f8a35c05d34b': b'-sHIhN8aK5NPCVz7v6hQPuOohQlABEeuBVMrCPgwcSY='}
+2025-02-14T16:31:38.167714+0000 | INFO | {'d1a5dc2d478b4d52fc1798e2d1c86f64': b'HK_nLSLAC2piq8M1I7TNA5k7kS5jdzY7gLVDUwTaD4s=', '2296f6c4e1cced7f2914f8a35c05d34b': b'-sHIhN8aK5NPCVz7v6hQPuOohQlABEeuBVMrCPgwcSY=', 'e1be70e2c5b4400621ea8b453d8e161a': b'l69lKmJ5a8s4FM5VoJxJwMtMu9p-iQFTT3rZ2mg01pQ='}
+2025-02-15T16:47:18.267971+0000 | INFO | {'9cdbe4003451ba36718ca10b3aae7b50': b'26yoizevv1Dd95734HG_RBco6PVqt7QubBNixAjL9WE='}
+2025-02-15T16:47:18.277929+0000 | INFO | {'9cdbe4003451ba36718ca10b3aae7b50': b'26yoizevv1Dd95734HG_RBco6PVqt7QubBNixAjL9WE='}
+2025-02-15T16:47:19.956233+0000 | INFO | 🔗 Logging in for user: 22372199@studentmail.ul.ie
+2025-02-15T16:47:21.357021+0000 | INFO | 🔄 Navigating to Student Timetable page...
+2025-02-15T16:47:21.424548+0000 | SUCCESS | ✅ Successfully retrieved timetable HTML.
+2025-02-15T16:47:21.552483+0000 | SUCCESS | ✅ Timetable successfully parsed.

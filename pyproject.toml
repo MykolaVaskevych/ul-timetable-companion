@@ -1,0 +1,19 @@
+[project]
+name = "ul-timetable-scraper"
+version = "0.1.0"
+description = "Command-line tool to fetch and display University of Limerick timetables"
+requires-python = ">=3.9"
+dependencies = [
+    "beautifulsoup4>=4.13.0",
+    "cryptography>=44.0.0",
+    "loguru>=0.7.0",
+    "playwright>=1.50.0",
+    "tabulate>=0.9.0",
+]
+
+[project.scripts]
+ul-timetable = "scraper:main"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
