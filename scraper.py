@@ -155,7 +155,8 @@ def save_timetable(timetable: Dict[str, Any], output_file: str) -> None:
 def generate_timetable_image(
     timetable: Dict[str, Any], 
     output_file: str, 
-    theme: str = "light"
+    theme: str = "light",
+    generate_all: bool = False
 ) -> None:
     """
     Generate a visual timetable using matplotlib and save as PNG.
@@ -163,7 +164,8 @@ def generate_timetable_image(
     Args:
         timetable: Dictionary containing timetable data
         output_file: Path to save the output image
-        theme: 'light' or 'dark' for different visual styles
+        theme: Visual style to use - 'light', 'dark', 'blue', 'sepia', or 'contrast'
+        generate_all: If True and theme is 'light', also generate all other themes
     """
     try:
         # Get all days with events
@@ -193,7 +195,68 @@ def generate_timetable_image(
             # Create custom dark theme figure
             fig = plt.figure(figsize=(14, 10), facecolor=background_color)
             ax = fig.add_subplot(111, facecolor=background_color)
-        else:  # light theme
+            
+        elif theme == "blue":
+            plt.style.use('default')
+            grid_color = '#A9CCE3'
+            text_color = '#1A5276'
+            border_color = '#2874A6'
+            title_color = '#1A5276'
+            # Blue theme colors
+            colors = [
+                "#AED6F1", "#85C1E9", "#3498DB", 
+                "#2E86C1", "#2874A6", "#21618C", 
+                "#1B4F72", "#7FB3D5", "#5499C7"
+            ]
+            base_alpha = 0.75
+            edge_alpha = 0.9
+            background_color = '#EBF5FB'
+            
+            # Create custom blue theme figure
+            fig = plt.figure(figsize=(14, 10), facecolor=background_color)
+            ax = fig.add_subplot(111, facecolor=background_color)
+            
+        elif theme == "sepia":
+            plt.style.use('default')
+            grid_color = '#D5B895'
+            text_color = '#6D4C41'
+            border_color = '#A1887F'
+            title_color = '#5D4037'
+            # Sepia theme colors - warm browns and earth tones
+            colors = [
+                "#E1C4A7", "#D4A478", "#C78F65", 
+                "#BA7A52", "#A66746", "#8D5B3F", 
+                "#754C37", "#5E3B2E", "#6D4C31"
+            ]
+            base_alpha = 0.75
+            edge_alpha = 0.9
+            background_color = '#F5EFDC'
+            
+            # Create custom sepia theme figure
+            fig = plt.figure(figsize=(14, 10), facecolor=background_color)
+            ax = fig.add_subplot(111, facecolor=background_color)
+            
+        elif theme == "contrast":
+            plt.style.use('dark_background')
+            grid_color = '#FFFFFF'
+            text_color = '#FFFFFF'
+            border_color = '#FFFFFF'
+            title_color = '#FFFFFF'
+            # High contrast colors
+            colors = [
+                "#FF0000", "#00FF00", "#0000FF", 
+                "#FFFF00", "#FF00FF", "#00FFFF", 
+                "#FFFFFF", "#FFA500", "#32CD32"
+            ]
+            base_alpha = 0.9
+            edge_alpha = 1.0
+            background_color = '#000000'
+            
+            # Create custom high contrast theme figure
+            fig = plt.figure(figsize=(14, 10), facecolor=background_color)
+            ax = fig.add_subplot(111, facecolor=background_color)
+            
+        else:  # light theme (default)
             plt.style.use('default')
             grid_color = '#cccccc'
             text_color = 'black'
@@ -263,6 +326,7 @@ def generate_timetable_image(
                 # Plot the event with rounded corners using custom patches
                 from matplotlib.patches import FancyBboxPatch
                 
+                # Create the main box with rounded corners
                 rect = FancyBboxPatch(
                     (day_index - 0.4, start_time),
                     0.8, end_time - start_time,
@@ -273,33 +337,32 @@ def generate_timetable_image(
                     alpha=base_alpha,
                 )
                 ax.add_patch(rect)
-
-                # Add course code with better text placement
-                ax.text(
-                    day_index,
-                    (start_time + end_time) / 2 - 0.15,
-                    event["course_code"],
-                    ha="center",
-                    va="center",
-                    fontsize=10,
-                    fontweight="bold",
-                    color=text_color,
-                    bbox=dict(
-                        facecolor='none', 
-                        edgecolor='none', 
-                        boxstyle='round,pad=0.2'
-                    )
+                
+                # Add a subtle top border for better visual separation
+                top_border = FancyBboxPatch(
+                    (day_index - 0.4, start_time),
+                    0.8, 0.05,
+                    boxstyle=f"round,pad=0.005,rounding_size=0.05",
+                    facecolor=to_rgba(color, 0.9),  # Slightly darker shade
+                    edgecolor='none',
+                    alpha=base_alpha * 1.2,  # Slightly more opaque
                 )
+                ax.add_patch(top_border)
 
-                # Add room with better text placement
-                if room != "Unknown":
+                # Event duration in hours
+                event_duration = end_time - start_time
+                
+                # Calculate label positions based on event duration
+                if event_duration > 1.0:  # For longer events show more details
+                    # Add course code near the top
                     ax.text(
                         day_index,
-                        (start_time + end_time) / 2 + 0.15,
-                        room,
+                        start_time + 0.25,
+                        event["course_code"],
                         ha="center",
                         va="center",
-                        fontsize=9,
+                        fontsize=10,
+                        fontweight="bold",
                         color=text_color,
                         bbox=dict(
                             facecolor='none', 
@@ -307,6 +370,81 @@ def generate_timetable_image(
                             boxstyle='round,pad=0.2'
                         )
                     )
+                    
+                    # Add lecturer in the middle if available
+                    if event.get("lecturer"):
+                        lecturer_name = event["lecturer"]
+                        # Truncate very long lecturer names
+                        if len(lecturer_name) > 20:
+                            lecturer_name = lecturer_name[:18] + "..."
+                            
+                        ax.text(
+                            day_index,
+                            (start_time + end_time) / 2,
+                            lecturer_name,
+                            ha="center",
+                            va="center",
+                            fontsize=8,
+                            color=text_color,
+                            fontstyle='italic',
+                            alpha=0.9,
+                            bbox=dict(
+                                facecolor='none', 
+                                edgecolor='none', 
+                                boxstyle='round,pad=0.1'
+                            )
+                        )
+                    
+                    # Add room at the bottom if available
+                    if room != "Unknown":
+                        ax.text(
+                            day_index,
+                            end_time - 0.15,
+                            room,
+                            ha="center",
+                            va="center",
+                            fontsize=9,
+                            color=text_color,
+                            bbox=dict(
+                                facecolor='none', 
+                                edgecolor='none', 
+                                boxstyle='round,pad=0.2'
+                            )
+                        )
+                else:  # For shorter events, just show course code and room
+                    # Add course code in the center
+                    ax.text(
+                        day_index,
+                        (start_time + end_time) / 2 - 0.15,
+                        event["course_code"],
+                        ha="center",
+                        va="center",
+                        fontsize=10,
+                        fontweight="bold",
+                        color=text_color,
+                        bbox=dict(
+                            facecolor='none', 
+                            edgecolor='none', 
+                            boxstyle='round,pad=0.2'
+                        )
+                    )
+                    
+                    # Add room below the course code if available
+                    if room != "Unknown":
+                        ax.text(
+                            day_index,
+                            (start_time + end_time) / 2 + 0.15,
+                            room,
+                            ha="center",
+                            va="center",
+                            fontsize=9,
+                            color=text_color,
+                            bbox=dict(
+                                facecolor='none', 
+                                edgecolor='none', 
+                                boxstyle='round,pad=0.2'
+                            )
+                        )
 
                 # Add time label inside the box at the top
                 ax.text(
@@ -377,7 +515,14 @@ def generate_timetable_image(
         )
 
         # Add a descriptive title with improved styling
-        mode_text = "Dark Mode" if theme == "dark" else "Light Mode"
+        theme_title_map = {
+            "light": "Light Mode",
+            "dark": "Dark Mode",
+            "blue": "Blue Theme",
+            "sepia": "Sepia Theme",
+            "contrast": "High Contrast"
+        }
+        mode_text = theme_title_map.get(theme, "Light Mode")
         plt.title(f"Weekly Timetable - {mode_text}", fontsize=16, fontweight='bold', color=title_color, pad=15)
         
         # Add date/time info in the corner
@@ -399,9 +544,10 @@ def generate_timetable_image(
         # Close the figure
         plt.close(fig)
         
-        # If this is the first run (light theme), also generate dark theme
-        if theme == "light":
-            generate_timetable_image(timetable, output_file, theme="dark")
+        # If this is a default run with light theme, generate all other themes
+        if theme == "light" and generate_all:
+            for additional_theme in ["dark", "blue", "sepia", "contrast"]:
+                generate_timetable_image(timetable, output_file, theme=additional_theme, generate_all=False)
             
     except Exception as e:
         logger.error(f"❌ Failed to generate timetable image: {str(e)}")
@@ -429,9 +575,9 @@ def main():
     )
     parser.add_argument(
         "--theme",
-        choices=["light", "dark", "both"],
-        default="both",
-        help="Theme for timetable visualization: light, dark, or both (default: both)",
+        choices=["light", "dark", "blue", "sepia", "contrast", "all"],
+        default="light",
+        help="Theme for timetable visualization (default: light)",
     )
     parser.add_argument(
         "--no-headless",
@@ -649,12 +795,12 @@ def main():
     # Generate image if requested
     if args.image:
         logger.info(f"🎨 Generating timetable visualization(s) with theme: {args.theme}")
-        if args.theme == "both":
-            # Both themes will be generated by default when calling with "light"
-            generate_timetable_image(timetable, args.image, theme="light")
+        if args.theme == "all":
+            # Generate light theme first (which will then generate all other themes)
+            generate_timetable_image(timetable, args.image, theme="light", generate_all=True)
         else:
             # Generate only the specified theme
-            generate_timetable_image(timetable, args.image, theme=args.theme)
+            generate_timetable_image(timetable, args.image, theme=args.theme, generate_all=False)
 
     # Display the timetable
     display_timetable(timetable, args.format)
