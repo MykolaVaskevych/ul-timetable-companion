@@ -7,6 +7,7 @@ __pycache__/
 dist/
 build/
 *.egg-info/
+*.egg
 
 # Virtual environments
 venv/
@@ -14,14 +15,31 @@ venv/
 env/
 
 # Logs and data
-logs/scraper.log
-logs/error_*.png
+logs/
+scraper.log
 output/data/calendar.ics
 output/data/timetable.json
 creds.json
 **/creds.json
 
+# IDE files
+.idea/
+.vscode/
+*.sublime-*
+
 # Temporary files
 .DS_Store
 .coverage
 .pytest_cache/
+*~
+*.swp
+*.swo
+
+# Lock files
+uv.lock
+poetry.lock
+
+# Image files that should remain in output directory
+/*.png
+/timetable_*.png
+/example_timetable_*.png
