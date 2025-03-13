@@ -288,23 +288,6 @@ ul-timetable --creds-file credentials.json
 - Store your credentials file securely if you use that option
 - The tool uses HTTPS for all communications with the timetable website
 
-## Development
-
-### Setting up a development environment
-
-```bash
-# Create a virtual environment
-python -m venv venv
-
-# Activate the virtual environment
-# Linux/macOS:
-source venv/bin/activate
-# Windows:
-venv\Scripts\activate
-
-# Install dependencies using uv
-uv sync -e .
-```
 
 ### Testing
 
