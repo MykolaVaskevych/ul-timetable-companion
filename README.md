@@ -41,9 +41,10 @@ git clone https://github.com/yourusername/ul-timetable-scraper.git
 cd ul-timetable-scraper
 ```
 
-2. Install the package in development mode:
+2. Create a virtual environment and install the package using uv:
 
 ```bash
+uv venv
 uv sync -e .
 ```
 
