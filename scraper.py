@@ -22,6 +22,9 @@ import numpy as np
 from playwright.sync_api import sync_playwright, TimeoutError
 from tabulate import tabulate
 
+# Constants
+DEFAULT_SLOW_MO = 100  # Default slow motion delay in milliseconds
+
 # Configure logging
 logger.remove()
 logger.add(
@@ -73,8 +76,13 @@ def scrape_timetable(html_content: str) -> Dict[str, Any]:
         return {"error": f"Failed to parse timetable HTML: {str(e)}"}
 
 
-def ensure_screenshot_dir():
-    """Ensure screenshots directory exists."""
+def ensure_screenshot_dir() -> str:
+    """
+    Ensure screenshots directory exists and create it if it doesn't.
+    
+    Returns:
+        str: Path to the screenshots directory
+    """
     screenshot_dir = os.path.join(
         os.path.dirname(os.path.abspath(__file__)), "screenshots"
     )
@@ -685,7 +693,16 @@ def generate_timetable_image(
         logger.error(f"❌ Failed to generate timetable image: {str(e)}")
 
 
-def main():
+def main() -> int:
+    """
+    Main entry point for the timetable scraper.
+    
+    Handles command-line arguments, manages the scraping process, and coordinates 
+    all output functions. Returns 0 on success, 1 on error.
+    
+    Returns:
+        int: Exit code (0 for success, 1 for error)
+    """
     parser = argparse.ArgumentParser(
         description="UL Timetable Scraper - Fetch your University of Limerick timetable."
     )
@@ -719,8 +736,8 @@ def main():
     parser.add_argument(
         "--slow-mo",
         type=int,
-        default=2000,
-        help="Slow motion delay in milliseconds for browser actions (default: 2000)",
+        default=DEFAULT_SLOW_MO,
+        help=f"Slow motion delay in milliseconds for browser actions (default: {DEFAULT_SLOW_MO})",
     )
     parser.add_argument(
         "-v", "--verbose", action="store_true", help="Increase logging verbosity"
