@@ -39,3 +39,94 @@ Call log:
 2025-02-15T16:47:21.357021+0000 | INFO | 🔄 Navigating to Student Timetable page...
 2025-02-15T16:47:21.424548+0000 | SUCCESS | ✅ Successfully retrieved timetable HTML.
 2025-02-15T16:47:21.552483+0000 | SUCCESS | ✅ Timetable successfully parsed.
+2025-03-13T13:44:10.450628+0000 | INFO | 🔗 Logging in for user: 22372199@studentmail.ul.ie
+2025-03-13T13:44:11.509383+0000 | INFO | 🔄 Navigating to Student Timetable page...
+2025-03-13T13:44:11.544522+0000 | SUCCESS | ✅ Successfully retrieved timetable HTML.
+2025-03-13T13:44:11.575333+0000 | SUCCESS | ✅ Timetable successfully parsed.
+2025-03-13T13:46:21.671603+0000 | INFO | 🔗 Logging in for user: 22372199@studentmail.ul.ie
+2025-03-13T13:46:31.878880+0000 | INFO | 🔄 Navigating to Student Timetable page...
+2025-03-13T13:46:31.924464+0000 | SUCCESS | ✅ Successfully retrieved timetable HTML.
+2025-03-13T13:46:32.043825+0000 | SUCCESS | ✅ Timetable successfully parsed.
+2025-03-13T13:48:21.771481+0000 | INFO | 🔗 Logging in for user: 22372199@studentmail.ul.ie
+2025-03-13T13:48:27.862667+0000 | INFO | 🔄 Navigating to Student Timetable page...
+2025-03-13T13:48:27.884533+0000 | SUCCESS | ✅ Successfully retrieved timetable HTML.
+2025-03-13T13:48:28.011727+0000 | SUCCESS | ✅ Timetable successfully parsed.
+2025-03-13T13:53:49.278889+0000 | INFO | 🔗 Logging in for user: 22372199@studentmail.ul.ie
+2025-03-13T13:53:50.419582+0000 | INFO | 🔄 Navigating to Student Timetable page...
+2025-03-13T13:53:50.437280+0000 | SUCCESS | ✅ Successfully retrieved timetable HTML.
+2025-03-13T13:53:50.460371+0000 | ERROR | ❌ Timetable table not found!
+2025-03-13T13:54:55.899804+0000 | INFO | 🔗 Logging in for user: 22372199@studentmail.ul.ie
+2025-03-13T13:54:57.017305+0000 | INFO | 🔄 Navigating to Student Timetable page...
+2025-03-13T13:54:57.038077+0000 | SUCCESS | ✅ Successfully retrieved timetable HTML.
+2025-03-13T13:54:57.057955+0000 | ERROR | ❌ Timetable table not found!
+2025-03-13T13:56:50.912305+0000 | INFO | 🔗 Logging in for user: 22372199@studentmail.ul.ie
+2025-03-13T13:56:57.308592+0000 | INFO | 🔄 Navigating to Student Timetable page...
+2025-03-13T13:56:57.330573+0000 | SUCCESS | ✅ Successfully retrieved timetable HTML.
+2025-03-13T13:56:57.467974+0000 | SUCCESS | ✅ Timetable successfully parsed.
+2025-03-13T13:57:48.187206+0000 | INFO | 🔗 Logging in for user: 22372199@studentmail.ul.ie
+2025-03-13T13:57:49.406250+0000 | INFO | 🔄 Navigating to Student Timetable page...
+2025-03-13T13:57:49.427002+0000 | SUCCESS | ✅ Successfully retrieved timetable HTML.
+2025-03-13T13:57:49.454049+0000 | ERROR | ❌ Timetable table not found!
+2025-03-13T14:03:12.108520+0000 | INFO | 🔗 Logging in for user: 22372199@studentmail.ul.ie
+2025-03-13T14:03:13.234698+0000 | INFO | 🔄 Navigating to Student Timetable page...
+2025-03-13T14:03:13.248933+0000 | SUCCESS | ✅ Successfully retrieved timetable HTML.
+2025-03-13T14:03:13.268453+0000 | ERROR | ❌ Timetable table not found in the HTML content! Check the screenshots folder for error details.
+2025-03-13T14:03:13.271313+0000 | ERROR | ❌ Timetable table not found in the HTML content
+2025-03-13T14:05:55.936088+0000 | INFO | 🔗 Logging in for user: 22372199@studentmai.ul.ie
+2025-03-13T14:06:02.106663+0000 | ERROR | ❌ Failed to save screenshot: Page.screenshot: Target page, context or browser has been closed
+2025-03-13T14:06:02.106930+0000 | ERROR | ❌ Cannot find or click Student Timetable link: Locator.click: Target page, context or browser has been closed
+Call log:
+  - waiting for get_by_role("link", name="Card image cap Student Timetable", exact=True)
+
+2025-03-13T14:06:02.209705+0000 | ERROR | ❌ Cannot find or click Student Timetable link: Locator.click: Target page, context or browser has been closed
+Call log:
+  - waiting for get_by_role("link", name="Card image cap Student Timetable", exact=True)
+
+2025-03-13T14:06:26.126440+0000 | INFO | 🔗 Logging in for user: 22372199@studentmail.ul.ie
+2025-03-13T14:06:27.414163+0000 | INFO | 🔄 Navigating to Student Timetable page...
+2025-03-13T14:06:27.454326+0000 | SUCCESS | ✅ Successfully retrieved timetable HTML.
+2025-03-13T14:06:27.548810+0000 | SUCCESS | ✅ Timetable successfully parsed.
+2025-03-13T15:17:57.867468+0000 | INFO | 🔗 Logging in for user: 22372199@studentmail.ul.ie
+2025-03-13T15:18:00.053370+0000 | INFO | 🔄 Navigating to Student Timetable page...
+2025-03-13T15:18:00.082913+0000 | SUCCESS | ✅ Successfully retrieved timetable HTML.
+2025-03-13T15:18:00.180457+0000 | ERROR | ❌ Timetable table not found in the HTML content! Check the screenshots folder for error details.
+2025-03-13T15:18:00.183441+0000 | ERROR | ❌ Timetable table not found in the HTML content
+2025-03-13T15:19:12.015010+0000 | INFO | 🔗 Logging in for user: 22372199@studentmail.ul.ie
+2025-03-13T15:19:18.189397+0000 | INFO | 🔄 Navigating to Student Timetable page...
+2025-03-13T15:19:18.213409+0000 | SUCCESS | ✅ Successfully retrieved timetable HTML.
+2025-03-13T15:19:18.342586+0000 | SUCCESS | ✅ Timetable successfully parsed.
+2025-03-13T15:19:49.043073+0000 | INFO | 🔗 Logging in for user: 22372199@studentmail.ul.ie
+2025-03-13T15:19:54.998708+0000 | INFO | 🔄 Navigating to Student Timetable page...
+2025-03-13T15:19:55.022333+0000 | SUCCESS | ✅ Successfully retrieved timetable HTML.
+2025-03-13T15:19:55.157601+0000 | SUCCESS | ✅ Timetable successfully parsed.
+2025-03-13T15:30:06.892023+0000 | INFO | 🔗 Logging in for user: 22372199@studentmail.ul.ie
+2025-03-13T15:30:08.746530+0000 | INFO | 🔄 Navigating to Student Timetable page...
+2025-03-13T15:30:08.765369+0000 | SUCCESS | ✅ Successfully retrieved timetable HTML.
+2025-03-13T15:30:08.860198+0000 | ERROR | ❌ Timetable table not found in the HTML content! Check the screenshots folder for error details.
+2025-03-13T15:30:08.863749+0000 | ERROR | ❌ Timetable table not found in the HTML content
+2025-03-13T15:31:06.763470+0000 | INFO | 🔗 Logging in for user: 22372199@studentmail.ul.ie
+2025-03-13T15:31:07.952654+0000 | INFO | 🔄 Navigating to Student Timetable page...
+2025-03-13T15:31:07.966922+0000 | SUCCESS | ✅ Successfully retrieved timetable HTML.
+2025-03-13T15:31:08.063220+0000 | ERROR | ❌ Timetable table not found in the HTML content! Check the screenshots folder for error details.
+2025-03-13T15:31:08.066140+0000 | ERROR | ❌ Timetable table not found in the HTML content
+2025-03-13T15:31:44.801466+0000 | INFO | 🔗 Logging in for user: 22372199@studentmail.ul.ie
+2025-03-13T15:31:51.330237+0000 | INFO | 🔄 Navigating to Student Timetable page...
+2025-03-13T15:31:51.352677+0000 | SUCCESS | ✅ Successfully retrieved timetable HTML.
+2025-03-13T15:31:51.488938+0000 | SUCCESS | ✅ Timetable successfully parsed.
+2025-03-13T15:31:52.216658+0000 | SUCCESS | ✅ Timetable image saved to time.png
+2025-03-13T15:40:56.584755+0000 | INFO | 🔍 Starting timetable scraping with slow_mo=2000ms
+2025-03-13T15:40:57.343558+0000 | INFO | 🔗 Logging in for user: 22372199@studentmail.ul.ie
+2025-03-13T15:41:10.077900+0000 | INFO | 🔄 Navigating to Student Timetable page...
+2025-03-13T15:41:12.103018+0000 | SUCCESS | ✅ Successfully retrieved timetable HTML.
+2025-03-13T15:41:12.130314+0000 | SUCCESS | ✅ Timetable successfully parsed.
+2025-03-13T15:41:12.155091+0000 | INFO | 🎨 Generating timetable visualization(s) with theme: both
+2025-03-13T15:41:12.559921+0000 | SUCCESS | ✅ Timetable image saved as timetable_light.png
+2025-03-13T15:41:12.837896+0000 | SUCCESS | ✅ Timetable image saved as timetable_dark.png
+2025-03-13T15:41:12.838216+0000 | SUCCESS | ✅ Timetable processing completed successfully
+2025-03-13T15:44:11.854733+0000 | INFO | 🔍 Starting timetable scraping with slow_mo=2000ms
+2025-03-13T15:44:12.583255+0000 | INFO | 🔗 Logging in for user: 23113758@studentmail.ul.ie
+2025-03-13T15:44:52.620782+0000 | INFO | 📸 Error screenshot saved to /Users/stnikolas/PycharmProjects/timetable_scraper/screenshots/error_timetable_link_20250313-154452.png
+2025-03-13T15:44:52.621563+0000 | ERROR | ❌ Cannot find or click Student Timetable link: Locator.wait_for: Timeout 30000ms exceeded.
+Call log:
+  - waiting for get_by_role("link", name="Card image cap Student Timetable", exact=True) to be visible
+
