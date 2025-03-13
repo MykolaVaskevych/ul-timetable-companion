@@ -90,6 +90,20 @@ def save_error_screenshot(page, error_type):
         return None
 
 
+def take_action_screenshot(page, action_name):
+    """Save a screenshot before or after an action when screenshots are enabled."""
+    screenshot_dir = ensure_screenshot_dir()
+    timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+    filename = f"{screenshot_dir}/action_{action_name}_{timestamp}.png"
+    try:
+        page.screenshot(path=filename)
+        logger.debug(f"📸 Action screenshot saved to {filename}")
+        return filename
+    except Exception as e:
+        logger.error(f"❌ Failed to save action screenshot: {str(e)}")
+        return None
+
+
 
 
 def display_timetable(timetable: Dict[str, Any], format_type: str = "json") -> None:
@@ -432,6 +446,10 @@ def main():
     parser.add_argument(
         "-v", "--verbose", action="store_true", help="Increase logging verbosity"
     )
+    parser.add_argument(
+        "--screenshots", action="store_true", 
+        help="Enable taking screenshots before and after each action (default: disabled)"
+    )
 
     args = parser.parse_args()
 
@@ -484,10 +502,18 @@ def main():
             page.wait_for_load_state("networkidle")
 
             try:
+                # Take screenshot before filling username if enabled
+                if args.screenshots:
+                    take_action_screenshot(page, "before_username_fill")
+                    
                 username_field = page.get_by_role("textbox", name="Username")
                 # Ensure element is visible and stable before interaction
                 username_field.wait_for(state="visible")
                 username_field.fill(username)
+                
+                # Take screenshot after filling username if enabled
+                if args.screenshots:
+                    take_action_screenshot(page, "after_username_fill")
             except Exception as e:
                 screenshot_path = save_error_screenshot(page, "username_field")
                 logger.error(
@@ -497,9 +523,17 @@ def main():
                 return 1
 
             try:
+                # Take screenshot before filling password if enabled
+                if args.screenshots:
+                    take_action_screenshot(page, "before_password_fill")
+                    
                 password_field = page.get_by_role("textbox", name="Password")
                 password_field.wait_for(state="visible")
                 password_field.fill(password)
+                
+                # Take screenshot after filling password if enabled
+                if args.screenshots:
+                    take_action_screenshot(page, "after_password_fill")
             except Exception as e:
                 screenshot_path = save_error_screenshot(page, "password_field")
                 logger.error(
@@ -509,11 +543,20 @@ def main():
                 return 1
 
             try:
+                # Take screenshot before clicking login if enabled
+                if args.screenshots:
+                    take_action_screenshot(page, "before_login_click")
+                    
                 login_button = page.get_by_role("button", name="Login")
                 login_button.wait_for(state="visible")
                 login_button.click()
+                
                 # Wait for navigation after login
                 page.wait_for_load_state("networkidle")
+                
+                # Take screenshot after login if enabled
+                if args.screenshots:
+                    take_action_screenshot(page, "after_login_click")
             except Exception as e:
                 screenshot_path = save_error_screenshot(page, "login_button")
                 logger.error(f"❌ Cannot find or click Login button: {str(e)}")
@@ -521,15 +564,25 @@ def main():
                 return 1
 
             try:
-                # Give some time for the dashboard to fully load
-                page.wait_for_timeout(1500)
+                # Wait for dashboard to fully load
+                page.wait_for_load_state("networkidle")
                 timetable_link = page.get_by_role(
                     "link", name="Card image cap Student Timetable", exact=True
                 )
                 timetable_link.wait_for(state="visible")
+                
+                # Take screenshot before clicking if enabled
+                if args.screenshots:
+                    take_action_screenshot(page, "before_timetable_click")
+                    
                 timetable_link.click()
+                
                 # Wait for navigation to complete
                 page.wait_for_load_state("networkidle")
+                
+                # Take screenshot after clicking if enabled
+                if args.screenshots:
+                    take_action_screenshot(page, "after_timetable_click")
             except Exception as e:
                 screenshot_path = save_error_screenshot(page, "timetable_link")
                 logger.error(
@@ -541,9 +594,18 @@ def main():
             logger.info("🔄 Navigating to Student Timetable page...")
             
             # Ensure timetable is fully loaded before capturing content
-            page.wait_for_timeout(2000)
+            page.wait_for_load_state("networkidle")
+            
+            # Take screenshot before capturing content if enabled
+            if args.screenshots:
+                take_action_screenshot(page, "before_content_capture")
+                
             html_content = page.content()
             logger.success("✅ Successfully retrieved timetable HTML.")
+            
+            # Take screenshot after capturing content if enabled
+            if args.screenshots:
+                take_action_screenshot(page, "after_content_capture")
             
             # Parse the timetable
             timetable = scrape_timetable(html_content)
