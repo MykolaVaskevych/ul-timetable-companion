@@ -485,7 +485,7 @@ def generate_timetable_image(
                     boxstyle=f"round,pad=0.005,rounding_size=0.05",
                     facecolor=to_rgba(color, 0.9),  # Slightly darker shade
                     edgecolor='none',
-                    alpha=base_alpha * 1.2,  # Slightly more opaque
+                    alpha=min(base_alpha * 1.2, 1.0),  # Slightly more opaque but capped at 1.0
                 )
                 ax.add_patch(top_border)
 
