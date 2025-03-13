@@ -376,6 +376,46 @@ def generate_timetable_image(
             fig = plt.figure(figsize=(14, 10), facecolor=background_color)
             ax = fig.add_subplot(111, facecolor=background_color)
             
+        elif theme == "purple":
+            plt.style.use('default')
+            grid_color = '#D6C4E3'
+            text_color = '#4A235A'
+            border_color = '#7D3C98'
+            title_color = '#4A235A'
+            # Purple theme colors
+            colors = [
+                "#E8DAEF", "#D2B4DE", "#BB8FCE", 
+                "#A569BD", "#8E44AD", "#7D3C98", 
+                "#6C3483", "#5B2C6F", "#4A235A"
+            ]
+            base_alpha = 0.75
+            edge_alpha = 0.9
+            background_color = '#F4ECF7'
+            
+            # Create custom purple theme figure
+            fig = plt.figure(figsize=(14, 10), facecolor=background_color)
+            ax = fig.add_subplot(111, facecolor=background_color)
+            
+        elif theme == "green":
+            plt.style.use('default')
+            grid_color = '#A9DFBF'
+            text_color = '#145A32'
+            border_color = '#27AE60'
+            title_color = '#145A32'
+            # Green theme colors
+            colors = [
+                "#E8F8F5", "#D1F2EB", "#A3E4D7", 
+                "#76D7C4", "#48C9B0", "#1ABC9C", 
+                "#17A589", "#148F77", "#117864"
+            ]
+            base_alpha = 0.75
+            edge_alpha = 0.9
+            background_color = '#E9F7EF'
+            
+            # Create custom green theme figure
+            fig = plt.figure(figsize=(14, 10), facecolor=background_color)
+            ax = fig.add_subplot(111, facecolor=background_color)
+            
         elif theme == "contrast":
             plt.style.use('dark_background')
             grid_color = '#FFFFFF'
@@ -660,6 +700,8 @@ def generate_timetable_image(
             "dark": "Dark Mode",
             "blue": "Blue Theme",
             "sepia": "Sepia Theme",
+            "purple": "Purple Theme",
+            "green": "Green Theme",
             "contrast": "High Contrast"
         }
         mode_text = theme_title_map.get(theme, "Light Mode")
@@ -686,11 +728,170 @@ def generate_timetable_image(
         
         # If this is a default run with light theme, generate all other themes
         if theme == "light" and generate_all:
-            for additional_theme in ["dark", "blue", "sepia", "contrast"]:
+            for additional_theme in ["dark", "blue", "sepia", "purple", "green", "contrast"]:
                 generate_timetable_image(timetable, output_file, theme=additional_theme, generate_all=False)
             
     except Exception as e:
         logger.error(f"❌ Failed to generate timetable image: {str(e)}")
+
+
+def scrape_timetable_for_user(username: str, password: str, headless: bool = True, slow_mo: int = DEFAULT_SLOW_MO, screenshots: bool = False) -> Dict[str, Any]:
+    """
+    Scrape timetable for a given user. This function is useful for programmatic usage and testing.
+    
+    Args:
+        username: The UL student email/username
+        password: The UL password
+        headless: Whether to run browser in headless mode
+        slow_mo: Slow motion delay in milliseconds for browser actions
+        screenshots: Whether to take screenshots during the process
+        
+    Returns:
+        Dict[str, Any]: The parsed timetable data or error information
+    """
+    logger.info(f"🔍 Starting timetable scraping with slow_mo={slow_mo}ms")
+    
+    # Ensure screenshots directory exists if needed
+    if screenshots:
+        ensure_screenshot_dir()
+    
+    with sync_playwright() as p:
+        # Launch browser with specified slow_mo value
+        browser = p.chromium.launch(headless=headless, slow_mo=slow_mo)
+        page = browser.new_page()
+
+        try:
+            logger.info(f"🔗 Logging in for user: {username}")
+            page.goto(
+                "https://www.timetable.ul.ie/Login.aspx?ReturnUrl=%2fUA%2fDefault.aspx"
+            )
+            
+            # Wait for page to be fully loaded
+            page.wait_for_load_state("networkidle")
+
+            try:
+                # Take screenshot before filling username if enabled
+                if screenshots:
+                    take_action_screenshot(page, "before_username_fill")
+                    
+                username_field = page.get_by_role("textbox", name="Username")
+                # Ensure element is visible and stable before interaction
+                username_field.wait_for(state="visible")
+                username_field.fill(username)
+                
+                # Take screenshot after filling username if enabled
+                if screenshots:
+                    take_action_screenshot(page, "after_username_fill")
+            except Exception as e:
+                screenshot_path = save_error_screenshot(page, "username_field")
+                logger.error(
+                    f"❌ Cannot find or interact with Username field: {str(e)}"
+                )
+                browser.close()
+                return {"error": f"Cannot find or interact with Username field: {str(e)}"}
+
+            try:
+                # Take screenshot before filling password if enabled
+                if screenshots:
+                    take_action_screenshot(page, "before_password_fill")
+                    
+                password_field = page.get_by_role("textbox", name="Password")
+                password_field.wait_for(state="visible")
+                password_field.fill(password)
+                
+                # Take screenshot after filling password if enabled
+                if screenshots:
+                    take_action_screenshot(page, "after_password_fill")
+            except Exception as e:
+                screenshot_path = save_error_screenshot(page, "password_field")
+                logger.error(
+                    f"❌ Cannot find or interact with Password field: {str(e)}"
+                )
+                browser.close()
+                return {"error": f"Cannot find or interact with Password field: {str(e)}"}
+
+            try:
+                # Take screenshot before clicking login if enabled
+                if screenshots:
+                    take_action_screenshot(page, "before_login_click")
+                    
+                login_button = page.get_by_role("button", name="Login")
+                login_button.wait_for(state="visible")
+                login_button.click()
+                
+                # Wait for navigation after login
+                page.wait_for_load_state("networkidle")
+                
+                # Take screenshot after login if enabled
+                if screenshots:
+                    take_action_screenshot(page, "after_login_click")
+            except Exception as e:
+                screenshot_path = save_error_screenshot(page, "login_button")
+                logger.error(f"❌ Cannot find or click Login button: {str(e)}")
+                browser.close()
+                return {"error": f"Cannot find or click Login button: {str(e)}"}
+
+            try:
+                # Wait for dashboard to fully load
+                page.wait_for_load_state("networkidle")
+                timetable_link = page.get_by_role(
+                    "link", name="Card image cap Student Timetable", exact=True
+                )
+                timetable_link.wait_for(state="visible")
+                
+                # Take screenshot before clicking if enabled
+                if screenshots:
+                    take_action_screenshot(page, "before_timetable_click")
+                    
+                timetable_link.click()
+                
+                # Wait for navigation to complete
+                page.wait_for_load_state("networkidle")
+                
+                # Take screenshot after clicking if enabled
+                if screenshots:
+                    take_action_screenshot(page, "after_timetable_click")
+            except Exception as e:
+                screenshot_path = save_error_screenshot(page, "timetable_link")
+                logger.error(
+                    f"❌ Cannot find or click Student Timetable link: {str(e)}"
+                )
+                browser.close()
+                return {"error": f"Cannot find or click Student Timetable link: {str(e)}"}
+
+            logger.info("🔄 Navigating to Student Timetable page...")
+            
+            # Ensure timetable is fully loaded before capturing content
+            page.wait_for_load_state("networkidle")
+            
+            # Take screenshot before capturing content if enabled
+            if screenshots:
+                take_action_screenshot(page, "before_content_capture")
+                
+            html_content = page.content()
+            logger.success("✅ Successfully retrieved timetable HTML.")
+            
+            # Take screenshot after capturing content if enabled
+            if screenshots:
+                take_action_screenshot(page, "after_content_capture")
+            
+            # Parse the timetable
+            timetable = scrape_timetable(html_content)
+
+        except TimeoutError as e:
+            screenshot_path = save_error_screenshot(page, "timeout")
+            logger.error(f"⏳ Timeout error: {str(e)}")
+            browser.close()
+            return {"error": f"Timeout error: {str(e)}"}
+        except Exception as e:
+            screenshot_path = save_error_screenshot(page, "unexpected")
+            logger.error(f"❌ Unexpected error: {str(e)}")
+            browser.close()
+            return {"error": f"Unexpected error: {str(e)}"}
+
+        browser.close()
+        
+    return timetable
 
 
 def main() -> int:
@@ -724,7 +925,7 @@ def main() -> int:
     )
     parser.add_argument(
         "--theme",
-        choices=["light", "dark", "blue", "sepia", "contrast", "all"],
+        choices=["light", "dark", "blue", "sepia", "purple", "green", "contrast", "all"],
         default="light",
         help="Theme for timetable visualization (default: light)",
     )
@@ -801,146 +1002,15 @@ def main() -> int:
 
         password = getpass.getpass("Enter your UL password: ")
 
-    # Run the scraper
-    logger.info(f"🔍 Starting timetable scraping with slow_mo={args.slow_mo}ms")
+    # Run the scraper using the reusable function
+    timetable = scrape_timetable_for_user(
+        username=username,
+        password=password,
+        headless=not args.no_headless,
+        slow_mo=args.slow_mo,
+        screenshots=args.screenshots
+    )
     
-    # Launch browser with specified slow_mo value
-    with sync_playwright() as p:
-        # Use the slow_mo value from args
-        browser = p.chromium.launch(headless=not args.no_headless, slow_mo=args.slow_mo)
-        page = browser.new_page()
-
-        try:
-            logger.info(f"🔗 Logging in for user: {username}")
-            page.goto(
-                "https://www.timetable.ul.ie/Login.aspx?ReturnUrl=%2fUA%2fDefault.aspx"
-            )
-            
-            # Wait for page to be fully loaded
-            page.wait_for_load_state("networkidle")
-
-            try:
-                # Take screenshot before filling username if enabled
-                if args.screenshots:
-                    take_action_screenshot(page, "before_username_fill")
-                    
-                username_field = page.get_by_role("textbox", name="Username")
-                # Ensure element is visible and stable before interaction
-                username_field.wait_for(state="visible")
-                username_field.fill(username)
-                
-                # Take screenshot after filling username if enabled
-                if args.screenshots:
-                    take_action_screenshot(page, "after_username_fill")
-            except Exception as e:
-                screenshot_path = save_error_screenshot(page, "username_field")
-                logger.error(
-                    f"❌ Cannot find or interact with Username field: {str(e)}"
-                )
-                browser.close()
-                return 1
-
-            try:
-                # Take screenshot before filling password if enabled
-                if args.screenshots:
-                    take_action_screenshot(page, "before_password_fill")
-                    
-                password_field = page.get_by_role("textbox", name="Password")
-                password_field.wait_for(state="visible")
-                password_field.fill(password)
-                
-                # Take screenshot after filling password if enabled
-                if args.screenshots:
-                    take_action_screenshot(page, "after_password_fill")
-            except Exception as e:
-                screenshot_path = save_error_screenshot(page, "password_field")
-                logger.error(
-                    f"❌ Cannot find or interact with Password field: {str(e)}"
-                )
-                browser.close()
-                return 1
-
-            try:
-                # Take screenshot before clicking login if enabled
-                if args.screenshots:
-                    take_action_screenshot(page, "before_login_click")
-                    
-                login_button = page.get_by_role("button", name="Login")
-                login_button.wait_for(state="visible")
-                login_button.click()
-                
-                # Wait for navigation after login
-                page.wait_for_load_state("networkidle")
-                
-                # Take screenshot after login if enabled
-                if args.screenshots:
-                    take_action_screenshot(page, "after_login_click")
-            except Exception as e:
-                screenshot_path = save_error_screenshot(page, "login_button")
-                logger.error(f"❌ Cannot find or click Login button: {str(e)}")
-                browser.close()
-                return 1
-
-            try:
-                # Wait for dashboard to fully load
-                page.wait_for_load_state("networkidle")
-                timetable_link = page.get_by_role(
-                    "link", name="Card image cap Student Timetable", exact=True
-                )
-                timetable_link.wait_for(state="visible")
-                
-                # Take screenshot before clicking if enabled
-                if args.screenshots:
-                    take_action_screenshot(page, "before_timetable_click")
-                    
-                timetable_link.click()
-                
-                # Wait for navigation to complete
-                page.wait_for_load_state("networkidle")
-                
-                # Take screenshot after clicking if enabled
-                if args.screenshots:
-                    take_action_screenshot(page, "after_timetable_click")
-            except Exception as e:
-                screenshot_path = save_error_screenshot(page, "timetable_link")
-                logger.error(
-                    f"❌ Cannot find or click Student Timetable link: {str(e)}"
-                )
-                browser.close()
-                return 1
-
-            logger.info("🔄 Navigating to Student Timetable page...")
-            
-            # Ensure timetable is fully loaded before capturing content
-            page.wait_for_load_state("networkidle")
-            
-            # Take screenshot before capturing content if enabled
-            if args.screenshots:
-                take_action_screenshot(page, "before_content_capture")
-                
-            html_content = page.content()
-            logger.success("✅ Successfully retrieved timetable HTML.")
-            
-            # Take screenshot after capturing content if enabled
-            if args.screenshots:
-                take_action_screenshot(page, "after_content_capture")
-            
-            # Parse the timetable
-            timetable = scrape_timetable(html_content)
-
-        except TimeoutError as e:
-            screenshot_path = save_error_screenshot(page, "timeout")
-            logger.error(f"⏳ Timeout error: {str(e)}")
-            browser.close()
-            return 1
-        except Exception as e:
-            screenshot_path = save_error_screenshot(page, "unexpected")
-            logger.error(f"❌ Unexpected error: {str(e)}")
-            browser.close()
-            return 1
-
-        browser.close()
-
     if "error" in timetable:
         logger.error(f"❌ {timetable['error']}")
         print(f"Error: {timetable['error']}")
@@ -955,8 +1025,10 @@ def main() -> int:
     if args.image:
         logger.info(f"🎨 Generating timetable visualization(s) with theme: {args.theme}")
         if args.theme == "all":
-            # Generate light theme first (which will then generate all other themes)
-            generate_timetable_image(timetable, args.image, theme="light", generate_all=True)
+            # Generate all themes independently (don't rely on generate_all flag)
+            themes = ["light", "dark", "blue", "sepia", "purple", "green", "contrast"]
+            for theme_name in themes:
+                generate_timetable_image(timetable, args.image, theme=theme_name, generate_all=False)
         else:
             # Generate only the specified theme
             generate_timetable_image(timetable, args.image, theme=args.theme, generate_all=False)

@@ -1,33 +1,49 @@
 import pytest
-import requests
-from scraper import scrape_timetable_for_user
+import os
+from bs4 import BeautifulSoup
+from scraper import scrape_timetable, scrape_timetable_for_user
+from datetime import datetime
 
-@pytest.fixture
-def test_scraper():
-    """Test Playwright scraping with mock login credentials."""
-    data = scrape_timetable_for_user("mock_user", "mock_pass")
-    assert isinstance(data, dict)
-    assert len(data) > 0
+def test_scrape_timetable():
+    """Test the HTML parsing function with a minimal HTML sample."""
+    # Create a simple timetable HTML structure
+    html = """
+    <table id="MainContent_StudentTimetableGridView">
+        <tr>
+            <th>Monday</th>
+            <th>Tuesday</th>
+        </tr>
+        <tr>
+            <td>9:00 - 10:00<br>CS101<br>Dr. Smith<br>Room A1<br>Weeks 1-12</td>
+            <td>11:00 - 12:00<br>CS102<br>Dr. Jones<br>Room B2<br>Weeks 1-12</td>
+        </tr>
+    </table>
+    """
+    
+    # Parse the HTML
+    result = scrape_timetable(html)
+    
+    # Check the structure and content
+    assert isinstance(result, dict)
+    assert "Monday" in result
+    assert "Tuesday" in result
+    assert len(result["Monday"]) == 1
+    assert result["Monday"][0]["time"] == "9:00 - 10:00"
+    assert result["Monday"][0]["course_code"] == "CS101"
+    assert result["Monday"][0]["lecturer"] == "Dr. Smith"
+    assert result["Monday"][0]["room"] == "Room A1"
+    assert result["Monday"][0]["weeks"] == "Weeks 1-12"
 
-def test_server():
-    """Test the Flask server API."""
-    session_response = requests.get("http://127.0.0.1:5000/get_session_key")
-    assert session_response.status_code == 200
-    session_data = session_response.json()
-
-    session_id = session_data["session_id"]
-    session_key = session_data["session_key"].encode()
-
-    # Encrypt sample login and password
-    from cryptography.fernet import Fernet
-    cipher = Fernet(session_key)
-    enc_login = cipher.encrypt("test_user".encode()).decode()
-    enc_password = cipher.encrypt("test_pass".encode()).decode()
-
-    response = requests.post(
-        "http://127.0.0.1:5000/get_timetable",
-        json={"session_id": session_id, "login": enc_login, "password": enc_password},
-    )
-
-    assert response.status_code == 200
-    assert isinstance(response.json(), dict)
+def test_mock_scrape_timetable_for_user():
+    """
+    Test the scrape_timetable_for_user function with mock credentials.
+    This test will return early due to login failure, but we can check 
+    that the function handles errors properly.
+    """
+    # Call with mock credentials (this will fail to login but should return a dict with error)
+    result = scrape_timetable_for_user("mock_user", "mock_pass", headless=True)
+    
+    # Check the result structure
+    assert isinstance(result, dict)
+    # Should have an error key since the credentials are not valid
+    assert "error" in result

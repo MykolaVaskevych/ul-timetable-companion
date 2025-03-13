@@ -12,6 +12,8 @@ A command-line tool to fetch and display University of Limerick timetables with 
   - Dark Mode
   - Blue Theme
   - Sepia Theme
+  - Purple Theme
+  - Green Theme
   - High Contrast
 - Export timetable to calendar format (iCalendar .ics)
 - Options to import to Google Calendar and Outlook
@@ -104,7 +106,7 @@ ul-timetable -v
 -o, --output         Save timetable to a JSON file
 -f, --format         Output format: json or table (default: json)
 --image              Generate and save timetable visualization as PNG images
---theme              Theme for visualization: light, dark, blue, sepia, contrast, or all (default: light)
+--theme              Theme for visualization: light, dark, blue, sepia, purple, green, contrast, or all (default: light)
 --export-calendar    Export timetable to iCalendar (.ics) format
 --semester-start     Semester start date in YYYY-MM-DD format (Monday of week 1)
 --no-headless        Run browser in visible mode (not headless)
@@ -136,6 +138,8 @@ This creates clear, visually appealing, color-coded visualizations of your sched
   - Dark Mode - Reduced eye strain for nighttime viewing
   - Blue Theme - Calming blue tones
   - Sepia Theme - Warm, paper-like appearance for comfortable reading
+  - Purple Theme - Elegant purple shades for a unique look
+  - Green Theme - Fresh, nature-inspired green colors
   - High Contrast - Maximum readability for accessibility needs
 - Higher resolution output (300 DPI) for better clarity
 
@@ -152,6 +156,12 @@ This creates clear, visually appealing, color-coded visualizations of your sched
 
 #### Sepia Theme
 ![Sepia Theme Example](example_timetable_sepia.png)
+
+#### Purple Theme
+![Purple Theme Example](example_timetable_purple.png)
+
+#### Green Theme
+![Green Theme Example](example_timetable_green.png)
 
 #### High Contrast Theme
 ![High Contrast Theme Example](example_timetable_contrast.png)
@@ -255,11 +265,22 @@ uv sync -e .
 
 ### Testing
 
-Tests are written using pytest:
+Tests are written using pytest and can be run with:
 
 ```bash
-pytest
+# Run tests with uv
+uv run pytest
+
+# Run tests with verbose output
+uv run pytest -v
+
+# Run a specific test file
+uv run pytest -v pytest_test.py
 ```
+
+The test suite includes:
+- Unit tests for the HTML parsing functionality
+- Integration tests for the timetable scraping with mock credentials
 
 ## Screenshots & Diagnostic Features
 
