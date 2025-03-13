@@ -3,11 +3,18 @@ import argparse
 import json
 import os
 import sys
-import datetime
+from datetime import datetime, timedelta
 import re
+import uuid
 from typing import Dict, Any, Optional, List, Tuple
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
+from email import encoders
 
 from bs4 import BeautifulSoup
+from icalendar import Calendar, Event as CalEvent
+import pytz
 from loguru import logger
 import matplotlib.pyplot as plt
 from matplotlib.colors import to_rgba
@@ -79,7 +86,7 @@ def ensure_screenshot_dir():
 def save_error_screenshot(page, error_type):
     """Save a screenshot when an error occurs."""
     screenshot_dir = ensure_screenshot_dir()
-    timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
     filename = f"{screenshot_dir}/error_{error_type}_{timestamp}.png"
     try:
         page.screenshot(path=filename)
@@ -93,7 +100,7 @@ def save_error_screenshot(page, error_type):
 def take_action_screenshot(page, action_name):
     """Save a screenshot before or after an action when screenshots are enabled."""
     screenshot_dir = ensure_screenshot_dir()
-    timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
     filename = f"{screenshot_dir}/action_{action_name}_{timestamp}.png"
     try:
         page.screenshot(path=filename)
@@ -104,6 +111,131 @@ def take_action_screenshot(page, action_name):
         return None
 
 
+
+
+def export_to_ical(timetable: Dict[str, Any], output_file: str, semester_start_date: datetime) -> str:
+    """
+    Export timetable to iCalendar format.
+    
+    Args:
+        timetable: Dictionary containing timetable data
+        output_file: Path to save the output .ics file
+        semester_start_date: Start date of the semester (first Monday)
+        
+    Returns:
+        Path to the created .ics file
+    """
+    try:
+        # Create a calendar
+        cal = Calendar()
+        cal.add('prodid', '-//UL Timetable Scraper//stnikolas.com//')
+        cal.add('version', '2.0')
+        
+        # Map day names to weekday numbers (0 = Monday, 6 = Sunday)
+        day_map = {
+            'Monday': 0, 'Tuesday': 1, 'Wednesday': 2, 
+            'Thursday': 3, 'Friday': 4, 'Saturday': 5, 'Sunday': 6
+        }
+        
+        # Create events for each day and time slot
+        for day, events in timetable.items():
+            if not events:
+                continue
+                
+            # Skip if day is not in our map
+            if day not in day_map:
+                logger.warning(f"⚠️ Unknown day: {day}, skipping")
+                continue
+                
+            weekday = day_map[day]
+            
+            # Calculate the date for this day in the first week
+            days_to_add = weekday  # 0 for Monday, 1 for Tuesday, etc.
+            event_date = semester_start_date + timedelta(days=days_to_add)
+            
+            for event in events:
+                # Skip empty events
+                if not event.get("course_code"):
+                    continue
+                    
+                # Parse time information
+                time_str = event["time"]
+                time_match = re.match(r"(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})", time_str)
+                if not time_match:
+                    logger.warning(f"⚠️ Could not parse time format: {time_str}")
+                    continue
+                    
+                start_hour, start_min, end_hour, end_min = map(int, time_match.groups())
+                
+                # Create datetime objects for start and end times
+                event_start = event_date.replace(hour=start_hour, minute=start_min, second=0)
+                event_end = event_date.replace(hour=end_hour, minute=end_min, second=0)
+                
+                # Get weeks information (e.g., "Weeks 1-12")
+                weeks_str = event.get("weeks", "")
+                weeks_match = re.search(r"(\d+)-(\d+)", weeks_str)
+                
+                # Create event occurrences for specified weeks
+                if weeks_match:
+                    start_week = int(weeks_match.group(1))
+                    end_week = int(weeks_match.group(2))
+                    
+                    # For each week in the range, create a calendar event
+                    for week_num in range(start_week, end_week + 1):
+                        week_offset = timedelta(days=(week_num - 1) * 7)
+                        
+                        # Calculate dates for this specific week
+                        week_event_start = event_start + week_offset
+                        week_event_end = event_end + week_offset
+                        
+                        # Create a calendar event
+                        cal_event = CalEvent()
+                        cal_event.add('summary', f"{event['course_code']}")
+                        if event.get("lecturer"):
+                            cal_event.add('description', f"Lecturer: {event['lecturer']}\nWeek: {week_num}")
+                        else:
+                            cal_event.add('description', f"Week: {week_num}")
+                        
+                        cal_event.add('location', event.get("room", "Unknown"))
+                        cal_event.add('dtstart', week_event_start)
+                        cal_event.add('dtend', week_event_end)
+                        
+                        # Add unique ID
+                        cal_event.add('uid', str(uuid.uuid4()))
+                        
+                        # Add the event to our calendar
+                        cal.add_component(cal_event)
+                else:
+                    # If no weeks specified, assume it's for all weeks
+                    # Create a recurring event
+                    cal_event = CalEvent()
+                    cal_event.add('summary', f"{event['course_code']}")
+                    if event.get("lecturer"):
+                        cal_event.add('description', f"Lecturer: {event['lecturer']}")
+                    
+                    cal_event.add('location', event.get("room", "Unknown"))
+                    cal_event.add('dtstart', event_start)
+                    cal_event.add('dtend', event_end)
+                    
+                    # Set up weekly recurrence for the semester (12 weeks is typical)
+                    cal_event.add('rrule', {'freq': 'weekly', 'count': 12})
+                    
+                    # Add unique ID
+                    cal_event.add('uid', str(uuid.uuid4()))
+                    
+                    # Add the event to our calendar
+                    cal.add_component(cal_event)
+        
+        # Write the calendar to a file
+        with open(output_file, 'wb') as f:
+            f.write(cal.to_ical())
+            
+        logger.success(f"✅ Calendar exported to {output_file}")
+        return output_file
+        
+    except Exception as e:
+        logger.error(f"❌ Failed to export calendar: {str(e)}")
+        return None
 
 
 def display_timetable(timetable: Dict[str, Any], format_type: str = "json") -> None:
@@ -526,7 +658,7 @@ def generate_timetable_image(
         plt.title(f"Weekly Timetable - {mode_text}", fontsize=16, fontweight='bold', color=title_color, pad=15)
         
         # Add date/time info in the corner
-        current_time = datetime.datetime.now().strftime("%Y-%m-%d")
+        current_time = datetime.now().strftime("%Y-%m-%d")
         ax.text(
             0.99, 0.01, f"Generated: {current_time}", 
             transform=ax.transAxes, fontsize=8, 
@@ -596,6 +728,16 @@ def main():
     parser.add_argument(
         "--screenshots", action="store_true", 
         help="Enable taking screenshots before and after each action (default: disabled)"
+    )
+    parser.add_argument(
+        "--export-calendar", 
+        help="Export timetable to iCalendar (.ics) format",
+        metavar="CALENDAR_PATH"
+    )
+    parser.add_argument(
+        "--semester-start", 
+        help="Semester start date in YYYY-MM-DD format (Monday of week 1, required for calendar export)",
+        metavar="DATE"
     )
 
     args = parser.parse_args()
@@ -801,6 +943,33 @@ def main():
         else:
             # Generate only the specified theme
             generate_timetable_image(timetable, args.image, theme=args.theme, generate_all=False)
+
+    # Export to calendar if requested
+    if args.export_calendar:
+        if not args.semester_start:
+            logger.error("❌ --semester-start is required for calendar export. Format: YYYY-MM-DD")
+            print("Error: --semester-start date is required for calendar export (format: YYYY-MM-DD)")
+            return 1
+        
+        try:
+            # Parse the semester start date
+            semester_start = datetime.strptime(args.semester_start, "%Y-%m-%d")
+            
+            # Ensure the semester start is a Monday
+            if semester_start.weekday() != 0:  # 0 = Monday
+                logger.warning("⚠️ Semester start date should be a Monday (first day of week 1)")
+                
+            # Export to iCalendar
+            calendar_path = export_to_ical(timetable, args.export_calendar, semester_start)
+            
+            if calendar_path:
+                logger.success(f"✅ Calendar exported to: {calendar_path}")
+                print(f"Calendar exported to: {calendar_path}")
+                print("You can import this file into Google Calendar, Outlook, or any other calendar app.")
+        except ValueError:
+            logger.error("❌ Invalid date format. Use YYYY-MM-DD format.")
+            print("Error: Invalid date format. Use YYYY-MM-DD format.")
+            return 1
 
     # Display the timetable
     display_timetable(timetable, args.format)
