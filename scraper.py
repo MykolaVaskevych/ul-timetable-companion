@@ -413,6 +413,7 @@ def main():
     )
     parser.add_argument("-u", "--username", help="Your UL student email")
     parser.add_argument("-p", "--password", help="Your UL password")
+    parser.add_argument("--creds-file", help="Path to a JSON file containing credentials (username and password)")
     parser.add_argument("-o", "--output", help="Save timetable to a JSON file")
     parser.add_argument(
         "-f",
@@ -471,9 +472,21 @@ def main():
     # Ensure screenshots directory exists
     ensure_screenshot_dir()
 
-    # Handle credential input - check args, then environment variables, then prompt
+    # Handle credential input - check args, creds file, environment variables, then prompt
     username = args.username or os.environ.get("UL_USERNAME")
     password = args.password or os.environ.get("UL_PASSWORD")
+    
+    # Check for credentials file if specified
+    if args.creds_file and not (username and password):
+        try:
+            logger.info(f"🔑 Reading credentials from file: {args.creds_file}")
+            with open(args.creds_file, 'r') as f:
+                creds_data = json.load(f)
+                username = username or creds_data.get('username')
+                password = password or creds_data.get('password')
+            logger.success("✅ Successfully read credentials from file")
+        except Exception as e:
+            logger.error(f"❌ Failed to read credentials from file: {str(e)}")
 
     if not username:
         username = input("Enter your UL student email: ")
