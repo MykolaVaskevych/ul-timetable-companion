@@ -7,14 +7,7 @@ A command-line tool to fetch and display University of Limerick timetables with 
 - Scrapes timetable data from the UL timetable website
 - Display timetable in JSON or tabular format
 - Save timetable to a JSON file
-- Generate beautiful visual timetable as PNG images with multiple themes:
-  - Light Mode
-  - Dark Mode
-  - Blue Theme
-  - Sepia Theme
-  - Purple Theme
-  - Green Theme
-  - High Contrast
+- Generate beautiful visual timetable as PNG images with multiple themes
 - Export timetable to calendar format (iCalendar .ics)
 - Options to import to Google Calendar and Outlook
 - Credentials management:
@@ -25,6 +18,8 @@ A command-line tool to fetch and display University of Limerick timetables with 
 - Robust page loading with intelligent waiting
 - Detailed logging with screenshot capabilities
 
+## if you are UL student and have your credentials then try it out:
+[web page](https://web-production-eed3e.up.railway.app/)
 ## Installation
 
 ### Prerequisites
