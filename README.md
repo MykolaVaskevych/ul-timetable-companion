@@ -40,7 +40,7 @@ cd ul-timetable-scraper
 
 ```bash
 uv venv
-uv sync -e .
+uv sync
 ```
 
 3. Install Playwright browser dependencies:
