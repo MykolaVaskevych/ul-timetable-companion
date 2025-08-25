@@ -52,6 +52,11 @@ python -m playwright install chromium
 ## Usage
 
 ### Basic usage:
+```bash
+uv run ul-timetable -u "user_id@studentmail.ul.ie" -p "password" -f table 
+```
+
+### Some more examples:
 
 ```bash
 # Run with interactive prompts for credentials
