@@ -18,8 +18,6 @@ A command-line tool to fetch and display University of Limerick timetables with 
 - Robust page loading with intelligent waiting
 - Detailed logging with screenshot capabilities
 
-## if you are UL student and have your credentials then try it out:
-[web page](https://web-production-eed3e.up.railway.app/)
 ## Installation
 
 ### Prerequisites
